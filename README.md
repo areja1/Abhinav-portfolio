@@ -1,113 +1,174 @@
-# Portfolio V5  
-Hello everyone!  
-Let me introduce myself, I’m Eki Zulfar Rachman. On this occasion, I’d like to share the portfolio website project that I’ve developed.  
+# Abhinav Reja — Portfolio (v5)
 
-**Tech Stack used:**  
-- ReactJS  
-- Tailwind CSS  
-- AOS  
-- Firebase  
-- Framer Motion  
-- Lucide  
-- Material UI  
-- SweetAlert2  
-
-**Website Link:**  
-[https://www.eki.my.id/](https://www.eki.my.id/)  
-
-We would appreciate it if you decide to use this project. Please include credit when using it. Thank you! 🙏  
 
 ---
 
-# Tutorial: Running the Project  
+## ✨ Highlights
 
-Here’s a simple guide to run this project.  
+* ⚡ **Vite 5** dev server & build pipeline (instant HMR, optimized bundles)
+* ⚛️ **React 18** with **React Router v6** for SPA navigation
+* 🎨 **Styling** via **Tailwind CSS**, **MUI v6**, and **styled‑components**
+* 🪄 **Animations** with **Framer Motion**, **AOS**, **GSAP**, and **React Spring**
+* 🧩 **shadcn/ui** & **Headless UI** for accessible building blocks
+* 🔥 **Firebase** (optional) for data/auth/storage (if used in your code)
+* ✉️ **EmailJS** for contact forms (no server needed)
+* 🎞️ **Lottie** and **Spline** for vector/3D experiences
+* 🧼 Modern linting with **ESLint 9** and React plugins
 
-## Prerequisites  
-
-Ensure that you have already installed:  
-- **Node.js**  
-
----
-
-## Steps to Run the Project  
-
-1. **Download this project:**  
-
-   ```bash  
-   git clone https://github.com/EkiZR/Portofolio_V5.git  
-   ```  
-
-2. **Install all dependencies:**  
-
-   ```bash  
-   npm install  
-   ```  
-   Or use:  
-
-   ```bash  
-   npm install --legacy-peer-deps  
-   ```  
-
-3. **Run the project:**  
-
-   ```bash  
-   npm run dev  
-   ```  
-
-4. **Open in browser:**  
-
-   Access the application through the link displayed in your terminal.  
+> Note: You can mix and match Tailwind, MUI, and styled‑components. Prefer one as the “primary” system and use the others surgically (icons, complex components).
 
 ---
 
-## Creating a Production Build  
+## 🧱 Tech Stack
 
-To create a production-ready build:  
+**Core**
 
-1. Run the build command:  
+* React 18, Vite 5, React Router v6
 
-   ```bash  
-   npm run build  
-   ```  
+**UI & Styling**
 
-2. The build files will be saved in the `dist` folder. You can upload this folder to your hosting server.  
+* Tailwind CSS (+ `tailwind-merge`, `tailwind-scrollbar`)
+* MUI v6 (`@mui/material`, `@mui/icons-material`)
+* styled‑components v6
+* shadcn/ui, Headless UI, Heroicons, lucide-react
+
+**Animation & Effects**
+
+* Framer Motion, AOS, GSAP, React Spring
+* Intersection Observer utilities
+
+**Integrations**
+
+* Firebase (optional), EmailJS
+* Lottie (`@lottiefiles/dotlottie-react`) & Spline (`@splinetool/react-spline`)
+
+**Tooling**
+
+* ESLint 9 (+ React & hooks plugins), PostCSS, Autoprefixer
 
 ---
 
-## Notes  
+## 🚀 Getting Started
 
-If you encounter issues while running the project, ensure that:  
-- Node.js is correctly installed.  
-- You’re in the correct project directory.  
-- All dependencies are installed without errors.  
+### 1) Prerequisites
+
+* **Node.js** 18+ (recommended) and **npm**
+
+### 2) Install
+
+```bash
+# from repo root
+npm ci   # uses package-lock for exact, reproducible install
+# or
+npm install
+```
+
+### 3) Run in dev
+
+```bash
+npm run dev
+```
+
+Vite will print a local URL (typically `http://localhost:5173`).
+
+### 4) Build for production
+
+```bash
+npm run build
+```
+
+
+
+```bash
+npm run preview
+```
+
+
+## 🧭 Project Structure (suggested)
+
+```
+project/
+├─ public/                # static assets (favicon, og images, robots.txt, etc.)
+├─ src/
+│  ├─ assets/             # local images, svgs, lotties
+│  ├─ components/         # UI building blocks
+│  ├─ features/           # feature-oriented modules (e.g., ContactForm, Projects)
+│  ├─ hooks/              # custom hooks
+│  ├─ pages/              # route-level components
+│  ├─ routes/             # router definitions
+│  ├─ styles/             # global.css, tailwind.css, theme.ts
+│  ├─ lib/                # api clients, firebase.ts, analytics, utils
+│  ├─ App.tsx|tsx         # root component
+│  └─ main.tsx            # entry (creates root, strict mode)
+├─ index.html             # Vite HTML (set <title> and meta here)
+├─ package.json
+└─ package-lock.json
+```
 
 ---
 
-## Firebase Configuration  
+## 🧩 UI Patterns & Tips
 
-To configure Firebase for this project, follow these steps:  
+* **Tailwind + MUI**: Use Tailwind for fast layout/utility and MUI for complex, accessible components. Wrap MUI with your theme for consistent colors/typography.
+* **styled‑components**: Great for component‑scoped styles and dynamic theming; avoid over‑mixing with Tailwind on the same element.
+* **Animations**: Prefer **Framer Motion** for in‑view/component transitions; use **GSAP** for timeline‑heavy scenes; **AOS** for simple scroll‑in effects.
+* **Accessibility**: Favor Headless UI/shadcn/ui primitives; always label icons and controls.
 
-1. **Add Firebase to the Project:**  
-   - Go to the [Firebase Console](https://console.firebase.google.com/).  
-   - Create a new project or use an existing one.  
+---
 
-2. **Enable Firestore Database:**  
-   - Create a database.  
+## 📨 Contact Form (EmailJS)
 
-3. **Go to Project Settings:**  
-   - Click the settings icon.  
-   - Copy the Firebase configuration.  
+1. Create an EmailJS account and email service/template.
+2. Put your **public key**, **service id**, and **template id** into `.env`.
+3. In your contact component, initialize EmailJS and send via `emailjs.send` with template params (name, email, message).
 
-4. **Go to Rules:**  
-   - Set the rules to `true`.  
+---
 
-5. **Adjust the Collection Structure:**  
-   - Set up the collections as shown in the following images:  
+## 🔥 Firebase (optional)
 
-   ![Collection Structure Example 1](https://github.com/user-attachments/assets/38580122-08a4-4499-a8fd-0f253652a239)  
-   ![Collection Structure Example 2](https://github.com/user-attachments/assets/d563d7ad-f1ab-46ff-8185-640dcebd0363)  
+If you’re persisting data (e.g., visitor messages, project listings):
 
-6. **Update `firebase.js` and `firebase-comment.js` Files:**  
-   - Replace the `firebaseConfig` content with your Firebase configuration.  
+* Add your Firebase config to `src/lib/firebase.ts` and initialize services you need.
+* Import and use in features (auth, firestore, storage, analytics).
+
+---
+
+## 🧹 Linting & Formatting
+
+```bash
+npm run lint
+```
+
+Configure ESLint rules in `eslint.config.js` or `.eslintrc.*` as preferred.
+
+---
+
+
+## 📄 License & Credits
+
+* Code: © Abhinav Reja. All rights reserved.
+* Libraries: Respect original licenses of dependencies (MUI, Tailwind, etc.).
+
+---
+
+## 🧪 Quick Commands (copy/paste)
+
+```bash
+# install exact versions per lockfile
+npm ci
+
+# dev server
+npm run dev
+
+# production build
+npm run build
+
+# preview production build locally
+npm run preview
+
+# run linter
+npm run lint
+```
+
+---
 
