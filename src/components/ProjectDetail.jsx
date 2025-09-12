@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import {Shield, GitBranch } from "lucide-react";
 import Swal from 'sweetalert2';
+import PROJECTS from "../data/projects"
 
 const TECH_ICONS = {
   React: Globe,
@@ -123,17 +124,21 @@ const ProjectDetails = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    const storedProjects = JSON.parse(localStorage.getItem("projects")) || [];
-    const selectedProject = storedProjects.find((p) => String(p.id) === id);
-    
-    if (selectedProject) {
-      const enhancedProject = {
-        ...selectedProject,
-        Features: selectedProject.Features || [],
-        TechStack: selectedProject.TechStack || [],
-        Github: selectedProject.Github || 'https://github.com/EkiZR',
-      };
-      setProject(enhancedProject);
+    try {
+      const selected = (Array.isArray(PROJECTS) ? PROJECTS : []).find(
+        (p) => String(p.id) === String(id)
+      );
+      if (selected) {
+        const enhanced = {
+          ...selected,
+          Features: selected.Features || [],
+          TechStack: selected.TechStack || [],
+          Github: selected.Github || "https://github.com/areja1",
+        };
+        setProject(enhanced);
+      }
+    } catch (e) {
+      console.error("Failed to load project details:", e);
     }
   }, [id]);
 

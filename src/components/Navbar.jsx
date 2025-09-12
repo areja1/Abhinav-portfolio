@@ -1,6 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 
+const getHeaderHeight = () => {
+  const nav = document.querySelector("nav");
+  return nav?.offsetHeight ?? 64; // fallback
+};
+
+// Case-insensitive section lookup: "#Contact" -> element with id "contact"
+const getSectionEl = (href) => {
+  if (!href?.startsWith("#")) return null;
+  const id = href.slice(1);
+  // try exact match first
+  let el = document.getElementById(id);
+  if (el) return el;
+  // fallback: case-insensitive search
+  const allWithId = Array.from(document.querySelectorAll("[id]"));
+  return allWithId.find((n) => n.id.toLowerCase() === id.toLowerCase()) || null;
+};
+
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
@@ -10,18 +27,19 @@ const Navbar = () => {
         { href: "#Home", label: "Home" },
         { href: "#About", label: "About" },
         { href: "#Portofolio", label: "Portofolio" },
-        { href: "#Contact", label: "Contact" },
+        { href: "#contact", label: "Contact" },
     ];
 
     useEffect(() => {
         const handleScroll = () => {
             setScrolled(window.scrollY > 20);
+            const headerH = getHeaderHeight();
             const sections = navItems.map(item => {
-                const section = document.querySelector(item.href);
+                const section = getSectionEl(item.href);
                 if (section) {
                     return {
                         id: item.href.replace("#", ""),
-                        offset: section.offsetTop - 550,
+                        offset: Math.max(0, section.offsetTop - headerH - 120),
                         height: section.offsetHeight
                     };
                 }
@@ -54,13 +72,11 @@ const Navbar = () => {
 
     const scrollToSection = (e, href) => {
         e.preventDefault();
-        const section = document.querySelector(href);
+        const section = getSectionEl(href);
+        const headerH = getHeaderHeight();
         if (section) {
-            const top = section.offsetTop - 100;
-            window.scrollTo({
-                top: top,
-                behavior: "smooth"
-            });
+          const y = Math.max(0, section.offsetTop - headerH - 16); // leave some air
+          window.scrollTo({ top: y, behavior: "smooth" });
         }
         setIsOpen(false);
     };
@@ -100,7 +116,7 @@ const Navbar = () => {
                             >
                                 <span
                                     className={`relative z-10 transition-colors duration-300 ${
-                                        activeSection === item.href.substring(1)
+                                        activeSection.toLowerCase() === item.href.substring(1).toLowerCase()
                                             ? "bg-gradient-to-r from-[#6366f1] to-[#a855f7] bg-clip-text text-transparent font-semibold"
                                             : "text-[#e2d3fd] group-hover:text-white"
                                     }`}
@@ -109,7 +125,7 @@ const Navbar = () => {
                                 </span>
                                 <span
                                     className={`absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-[#6366f1] to-[#a855f7] transform origin-left transition-transform duration-300 ${
-                                        activeSection === item.href.substring(1)
+                                        activeSection.toLowerCase() === item.href.substring(1).toLowerCase()
                                             ? "scale-x-100"
                                             : "scale-x-0 group-hover:scale-x-100"
                                     }`}
@@ -154,7 +170,7 @@ const Navbar = () => {
                             href={item.href}
                             onClick={(e) => scrollToSection(e, item.href)}
                             className={`block px-4 py-3 text-lg font-medium transition-all duration-300 ease ${
-                                activeSection === item.href.substring(1)
+                                activeSection.toLowerCase() === item.href.substring(1).toLowerCase()
                                     ? "bg-gradient-to-r from-[#6366f1] to-[#a855f7] bg-clip-text text-transparent font-semibold"
                                     : "text-[#e2d3fd] hover:text-white"
                             }`}
