@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import React, { useState } from 'react';
 import "./index.css";
 import Home from "./Pages/Home";
@@ -10,6 +10,8 @@ import ContactPage from "./Pages/Contact";
 import ProjectDetails from "./components/ProjectDetail";
 import WelcomeScreen from "./Pages/WelcomeScreen";
 import { AnimatePresence } from 'framer-motion';
+import ErrorBoundary from "./components/ErrorBoundary";
+import Certificate from "./components/Certificate";
 
 const LandingPage = ({ showWelcome, setShowWelcome }) => {
   return (
@@ -61,10 +63,19 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LandingPage showWelcome={showWelcome} setShowWelcome={setShowWelcome} />} />
-        <Route path="/project/:id" element={<ProjectPageLayout />} />
-      </Routes>
+      <ErrorBoundary>
+        <Routes>
+          <Route
+            path="/"
+            element={<LandingPage showWelcome={showWelcome} setShowWelcome={setShowWelcome} />}
+          />
+          <Route path="/project/:id" element={<ProjectPageLayout />} />
+          {/* NEW: Achievements route */}
+          <Route path="/achievements" element={<Certificate />} />
+          {/* Fallback: redirect unknown routes to Home */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </ErrorBoundary>
     </BrowserRouter>
   );
 }

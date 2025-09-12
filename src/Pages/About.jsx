@@ -1,4 +1,8 @@
 import React, { useEffect, memo, useMemo } from "react";
+// Import JSON (replace paths with your real ones)
+import PROJECTS from "../data/projects";
+import ACHIEVEMENTS from "../data/achievements";
+import { Link } from "react-router-dom";
 import {
   FileText,
   Code,
@@ -80,7 +84,7 @@ const ProfileImage = memo(() => (
 /* =========================
    Stat Card (Total Projects / Achievements / Years)
    ========================= */
-const StatCard = memo(({ icon: Icon, color, value, label, description, animation }) => (
+const StatCard = memo(({ icon: Icon, color, value, label, description, animation, href }) => (
   <div data-aos={animation} data-aos-duration={1300} className="relative group">
     <div className="relative z-10 bg-gray-900/50 backdrop-blur-lg rounded-2xl p-6 border border-white/10 overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl h-full flex flex-col justify-between">
       <div className={`absolute -z-10 inset-0 bg-gradient-to-br ${color} opacity-10 group-hover:opacity-20 transition-opacity duration-300`} />
@@ -118,7 +122,29 @@ const StatCard = memo(({ icon: Icon, color, value, label, description, animation
           >
             {description}
           </p>
-          <ArrowUpRight className="w-4 h-4 text-white/50 group-hover:text-white transition-colors" />
+          {href ? (
+            href.startsWith("/") ? (
+              <Link
+                to={href}
+                aria-label={`Open ${label}`}
+                className="p-2 rounded-lg hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/20"
+              >
+                <ArrowUpRight className="w-4 h-4 text-white/70 group-hover:text-white transition-colors" />
+              </Link>
+            ) : (
+              <a
+                href={href}
+                aria-label={`Open ${label}`}
+                className="p-2 rounded-lg hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/20"
+              >
+                <ArrowUpRight className="w-4 h-4 text-white/70 group-hover:text-white transition-colors" />
+              </a>
+            )
+          ) : (
+            <span className="p-2">
+              <ArrowUpRight className="w-4 h-4 text-white/50" />
+            </span>
+          )}
         </div>
       </div>
     </div>
@@ -129,11 +155,12 @@ const StatCard = memo(({ icon: Icon, color, value, label, description, animation
    Page
    ========================= */
 const AboutPage = () => {
-  // Pull counts from localStorage (or 0 by default)
+  
   const { totalProjects, totalAchievements, years } = useMemo(() => {
-    const storedProjects = JSON.parse(localStorage.getItem("projects") || "[]");
-    const storedAchievements = JSON.parse(localStorage.getItem("certificates") || "[]");
+    const projectsCount = Array.isArray(PROJECTS) ? PROJECTS.length : 0;
+    const achievementsCount = Array.isArray(ACHIEVEMENTS) ? ACHIEVEMENTS.length : 0;
 
+    // full years since 2021-11-06
     const startDate = new Date("2021-11-06");
     const now = new Date();
     let y = now.getFullYear() - startDate.getFullYear();
@@ -141,8 +168,8 @@ const AboutPage = () => {
     if (m < 0 || (m === 0 && now.getDate() < startDate.getDate())) y -= 1;
 
     return {
-      totalProjects: Array.isArray(storedProjects) ? storedProjects.length : 0,
-      totalAchievements: Array.isArray(storedAchievements) ? storedAchievements.length : 0,
+      totalProjects: projectsCount,
+      totalAchievements: achievementsCount,
       years: y < 0 ? 0 : y,
     };
   }, []);
@@ -160,6 +187,7 @@ const AboutPage = () => {
         label: "Total Projects",
         description: "Innovative web solutions crafted",
         animation: "fade-right",
+        href: "#Portofolio",
       },
       {
         icon: Award,
@@ -168,6 +196,7 @@ const AboutPage = () => {
         label: "Achievements",
         description: "Professional milestones earned",
         animation: "fade-up",
+        href: "#Portofolio",
       },
       {
         icon: Globe,
@@ -182,7 +211,7 @@ const AboutPage = () => {
   );
 
   return (
-    <div className="h-auto pb-[10%] text-white overflow-hidden px-[5%] sm:px-[5%] lg:px-[10%] mt-10 sm-mt-0" id="About">
+    <div className="h-auto pb-[10%] text-white overflow-hidden px-[5%] sm:px-[5%] lg:px-[10%] mt-10 sm-mt-0 scroll-mt-24" id="About">
       <Header />
 
       <div className="w-full mx-auto pt-8 sm:pt-12 relative">
@@ -240,14 +269,12 @@ const AboutPage = () => {
           <ProfileImage />
         </div>
 
-        {/* Stats row — Total Projects / Achievements / Years of Experience */}
-        <a href="#Portofolio">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16 cursor-pointer">
-            {statsData.map((stat) => (
-              <StatCard key={stat.label} {...stat} />
-            ))}
-          </div>
-        </a>
+        {/* Stats row — each card links individually (no outer anchor) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">
+          {statsData.map((stat) => (
+            <StatCard key={stat.label} {...stat} />
+          ))}
+        </div>
       </div>
 
       {/* Keyframes for custom animations */}
