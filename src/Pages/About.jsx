@@ -1,15 +1,18 @@
-import React, { useEffect, memo, useMemo } from "react";
-// Import JSON (replace paths with your real ones)
+import React, { useEffect, useMemo, useState, memo } from "react";
 import PROJECTS from "../data/projects";
 import ACHIEVEMENTS from "../data/achievements";
 import { Link } from "react-router-dom";
 import {
-  FileText,
   Code,
   Award,
   Globe,
   ArrowUpRight,
-  Sparkles,
+  Github,
+  Linkedin,
+  Phone,
+  Mail,
+  FileText,
+  Sparkles
 } from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -83,73 +86,74 @@ const ProfileImage = memo(() => (
 
 /* =========================
    Stat Card (Total Projects / Achievements / Years)
+   Make the *whole card* clickable while keeping the arrow visible.
    ========================= */
-const StatCard = memo(({ icon: Icon, color, value, label, description, animation, href }) => (
-  <div data-aos={animation} data-aos-duration={1300} className="relative group">
-    <div className="relative z-10 bg-gray-900/50 backdrop-blur-lg rounded-2xl p-6 border border-white/10 overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl h-full flex flex-col justify-between">
-      <div className={`absolute -z-10 inset-0 bg-gradient-to-br ${color} opacity-10 group-hover:opacity-20 transition-opacity duration-300`} />
-      <div className="flex items-center justify-between mb-4">
-        <div className="w-16 h-16 rounded-full flex items-center justify-center bg-white/10 transition-transform group-hover:rotate-6">
-          <Icon className="w-8 h-8 text-white" />
-        </div>
-        <span
-          className="text-4xl font-bold text-white"
-          data-aos="fade-up-left"
-          data-aos-duration="1500"
-          data-aos-anchor-placement="top-bottom"
-        >
-          {label?.toLowerCase().includes("experience")
-            ? `${value}+`
-            : value}
-        </span>
-      </div>
+const StatCard = memo(({ icon: Icon, color, value, label, description, animation, href, tab }) => {
+  // Build a single target with the tab hint your Portfolio reads
+  const target = href
+    ? `${href}${href.includes("#Portofolio") ? "" : "#Portofolio"}${tab ? `?tab=${tab}` : ""}`
+    : null;
 
-      <div>
-        <p
-          className="text-sm uppercase tracking-wider text-gray-300 mb-2"
-          data-aos="fade-up"
-          data-aos-duration="800"
-          data-aos-anchor-placement="top-bottom"
-        >
-          {label}
-        </p>
-        <div className="flex items-center justify-between">
-          <p
-            className="text-xs text-gray-400"
-            data-aos="fade-up"
-            data-aos-duration="1000"
+  // Smooth scroll helper (offset accounts for any sticky header)
+  const scrollToPortfolioNow = () => {
+    const el = document.getElementById("Portofolio");
+    if (!el) return;
+    const offset = 96; // px
+    const y = el.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({ top: y, behavior: "smooth" });
+  };
+
+  return (
+    <div data-aos={animation} data-aos-duration={1300} className={`relative ${href ? "group cursor-pointer" : "group"}`}>
+      {/* Card UI */}
+      <div className="relative z-10 bg-gray-900/50 backdrop-blur-lg rounded-3xl border border-white/10 p-6 hover:scale-105 hover:shadow-2xl h-full flex flex-col justify-between transition-transform">
+        <div className="absolute -z-10 inset-0 bg-gradient-to-br from-[#6366f1]/10 to-[#a855f7]/10 rounded-3xl opacity-10 group-hover:opacity-20 transition-opacity duration-300" />
+        <div className="flex items-center justify-between mb-4">
+          <div className="w-16 h-16 rounded-full flex items-center justify-center bg-white/10 transition-transform group-hover:rotate-6">
+            <Icon className="w-8 h-8 text-white" />
+          </div>
+          <span
+            className="text-4xl font-bold text-white"
+            data-aos="fade-up-left"
+            data-aos-duration="1500"
             data-aos-anchor-placement="top-bottom"
           >
-            {description}
-          </p>
-          {href ? (
-            href.startsWith("/") ? (
-              <Link
-                to={href}
-                aria-label={`Open ${label}`}
-                className="p-2 rounded-lg hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/20"
-              >
-                <ArrowUpRight className="w-4 h-4 text-white/70 group-hover:text-white transition-colors" />
-              </Link>
-            ) : (
-              <a
-                href={href}
-                aria-label={`Open ${label}`}
-                className="p-2 rounded-lg hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/20"
-              >
-                <ArrowUpRight className="w-4 h-4 text-white/70 group-hover:text-white transition-colors" />
-              </a>
-            )
-          ) : (
-            <span className="p-2">
-              <ArrowUpRight className="w-4 h-4 text-white/50" />
+            {label?.toLowerCase().includes("experience") ? `${value}+` : value}
+          </span>
+        </div>
+        <div className="mt-2">
+          <p className="text-xs tracking-wider text-white/70 font-semibold">{label?.toUpperCase()}</p>
+          <div className="mt-2 flex items-center justify-between">
+            <p className="text-white/70">{description}</p>
+            {/* Arrow remains visible but is decorative; clicks go to the overlay link */}
+            <span className="p-2 rounded-lg group-hover:bg-white/10 pointer-events-none">
+              <ArrowUpRight className="w-4 h-4 text-white/70 group-hover:text-white transition-colors" />
             </span>
-          )}
+          </div>
         </div>
       </div>
+
+      {/* Full-card clickable overlay (Link for internal, <a> for external) */}
+      {href ? (
+        href.startsWith("/") ? (
+          <Link
+            to={target}
+            aria-label={`Open ${label}`}
+            onClick={() => { scrollToPortfolioNow(); }}
+            className="absolute inset-0 rounded-3xl z-20"
+          />
+        ) : (
+          <a
+            href={target}
+            aria-label={`Open ${label}`}
+            onClick={() => { scrollToPortfolioNow(); }}
+            className="absolute inset-0 rounded-3xl z-20"
+          />
+        )
+      ) : null}
     </div>
-  </div>
-));
+  );
+});
 
 /* =========================
    Page
@@ -178,6 +182,30 @@ const AboutPage = () => {
     AOS.init({ once: false });
   }, []);
 
+  // ===== Contact helpers =====
+  const [showPhone, setShowPhone] = useState(false);
+  const [showEmail, setShowEmail] = useState(false);   
+  const PHONE_NUMBER = "+1 (480)942-8069";
+  const EMAIL_ADDRESS = "areja1@asu.edu";
+  const scrollToContact = () => {
+    const el = document.getElementById("Contact") || document.getElementById("contact");
+    if (!el) return;
+    const offset = 96; // adjust if you have a sticky header
+    const y = el.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({ top: y, behavior: "smooth" });
+  };
+ // Close modals on ESC
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "Escape") {
+        setShowPhone(false);
+        setShowEmail(false);                           
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
   const statsData = useMemo(
     () => [
       {
@@ -188,6 +216,7 @@ const AboutPage = () => {
         description: "Innovative web solutions crafted",
         animation: "fade-right",
         href: "#Portofolio",
+        tab: "projects",
       },
       {
         icon: Award,
@@ -197,6 +226,7 @@ const AboutPage = () => {
         description: "Professional milestones earned",
         animation: "fade-up",
         href: "#Portofolio",
+        tab: "achievements",
       },
       {
         icon: Globe,
@@ -205,11 +235,12 @@ const AboutPage = () => {
         label: "Years of Experience",
         description: "Continuous learning journey",
         animation: "fade-left",
+        href: "#Portofolio",
+        tab: "experience",
       },
     ],
     [totalProjects, totalAchievements, years]
   );
-
   return (
     <div className="h-auto pb-[10%] text-white overflow-hidden px-[5%] sm:px-[5%] lg:px-[10%] mt-10 sm-mt-0 scroll-mt-24" id="About">
       <Header />
@@ -253,16 +284,122 @@ const AboutPage = () => {
                   <FileText className="w-4 h-4 sm:w-5 sm:h-5" /> Download CV
                 </button>
               </a>
-              <a href="#Portofolio" className="w-full lg:w-auto">
+              {/* Contact CTA — same visual style as Download CV */}
+              <a
+                href="#Contact"
+                className="w-full lg:w-auto"
+                onClick={(e) => { e.preventDefault(); scrollToContact(); }}
+              >
                 <button
                   data-aos="fade-up"
                   data-aos-duration="1000"
-                  className="w-full lg:w-auto sm:px-6 py-2 sm:py-3 rounded-lg border border-[#a855f7]/50 text-[#a855f7] font-medium transition-all duration-300 hover:scale-105 flex items-center justify-center lg:justify-start gap-2 hover:bg-[#a855f7]/10 animate-bounce-slow delay-200"
+                  className="w-full lg:w-auto sm:px-6 py-2 sm:py-2 rounded-xl
+                             bg-gradient-to-r from-[#6366f1] to-[#a855f7]
+                             text-white border border-white/10
+                             flex items-center gap-2 shadow
+                             hover:opacity-95 transition-all"
                 >
-                  <Code className="w-4 h-4 sm:w-5 sm:h-5" /> View Projects
+                  <Mail className="w-4 h-4 sm:w-5 sm:h-5" />
+                  Contact
                 </button>
               </a>
             </div>
+            {/* ===== Social icons ===== */}
+            <div className="mt-4 flex items-center gap-4">
+              <a
+                href="https://github.com/your-handle" target="_blank" rel="noreferrer"
+                className="p-3 rounded-2xl bg-white/5 border border-white/10 hover:border-white/20 hover:bg-white/10 transition-all shadow"
+                aria-label="GitHub"
+              >
+                <Github className="w-5 h-5 text-white/80" />
+              </a>
+              <a
+                href="https://www.linkedin.com/in/your-handle" target="_blank" rel="noreferrer"
+                className="p-3 rounded-2xl bg-white/5 border border-white/10 hover:border-white/20 hover:bg-white/10 transition-all shadow"
+                aria-label="LinkedIn"
+              >
+                <Linkedin className="w-5 h-5 text-white/80" />
+              </a>
+              {/* Phone (replaces Instagram) -> opens modal */}
+              <button
+                type="button"
+                onClick={() => setShowPhone(true)}
+                className="p-3 rounded-2xl bg-white/5 border border-white/10 hover:border-white/20 hover:bg-white/10 transition-all shadow"
+                aria-label="Phone"
+              >
+                <Phone className="w-5 h-5 text-white/80" />
+              </button>
+              {/* Email -> opens modal */}
+              <button
+                type="button"
+                onClick={() => setShowEmail(true)}
+                className="p-3 rounded-2xl bg-white/5 border border-white/10 hover:border-white/20 hover:bg-white/10 transition-all shadow"
+                aria-label="Email"
+              >
+                <Mail className="w-5 h-5 text-white/80" />
+              </button>
+            </div>
+
+            {/* ===== Simple phone modal with soft animation ===== */}
+            {showPhone && (
+              <div className="fixed inset-0 z-[1000] flex items-center justify-center">
+                <div className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-200" onClick={()=>setShowPhone(false)} />
+                <div className="relative z-[1001] w-[92%] max-w-sm rounded-2xl border border-white/10 bg-[#0b0f1a] p-5
+                                shadow-2xl scale-95 opacity-0 animate-[modalIn_.18s_ease-out_forwards]">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-xl bg-white/5 border border-white/10">
+                      <Phone className="w-5 h-5 text-white/90" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-white">Connect via call</h3>
+                  </div>
+                  <p className="mt-3 text-white/80 select-all">{PHONE_NUMBER}</p>
+                  <div className="mt-5 flex justify-end">
+                    <button
+                      onClick={()=>setShowPhone(false)}
+                      className="px-4 py-1.5 rounded-lg bg-white/10 border border-white/10 hover:bg-white/20 text-white"
+                    >
+                      OK
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ===== Email modal (same style) ===== */}
+            {showEmail && (
+              <div className="fixed inset-0 z-[1000] flex items-center justify-center">
+                <div
+                  className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-200"
+                  onClick={() => setShowEmail(false)}
+                />
+                <div className="relative z-[1001] w-[92%] max-w-sm rounded-2xl border border-white/10 bg-[#0b0f1a] p-5
+                                shadow-2xl scale-95 opacity-0 animate-[modalIn_.18s_ease-out_forwards]">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-xl bg-white/5 border border-white/10">
+                      <Mail className="w-5 h-5 text-white/90" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-white">Connect via email</h3>
+                  </div>
+                  <p className="mt-3 text-white/80 select-all">{EMAIL_ADDRESS}</p>
+                  <div className="mt-5 flex justify-end gap-2">
+                    <a
+                      href={`mailto:${EMAIL_ADDRESS}`}
+                      className="px-4 py-1.5 rounded-lg bg-white/10 border border-white/10 hover:bg-white/20 text-white"
+                      onClick={() => setShowEmail(false)}
+                    >
+                      Open Mail
+                    </a>
+                    <button
+                      onClick={() => setShowEmail(false)}
+                      className="px-4 py-1.5 rounded-lg bg-white/10 border border-white/10 hover:bg-white/20 text-white"
+                    >
+                      OK
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+            
           </div>
 
           {/* RIGHT: Animated profile holder (ONLY this, no extra <img/>) */}

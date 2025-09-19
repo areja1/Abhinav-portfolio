@@ -122,8 +122,73 @@ img, video { max-width: 100%; height: auto; display: block; }
 	 .animate-shine {
    animation: shine 1.5s ease-in-out infinite;
  }
+ @keyframes modalIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
 
-  
+
+/* ===== Projects splash backdrop ===== */
+@keyframes splash-orb-drift-1 {
+  0%   { transform: translate(-50%,-50%) scale(0.9) rotate(0deg);   }
+  50%  { transform: translate(-50%,-50%) scale(1.05) rotate(180deg);}
+  100% { transform: translate(-50%,-50%) scale(0.9) rotate(360deg); }
+}
+@keyframes splash-orb-drift-2 {
+  0%   { transform: translate(-50%,-50%) scale(1) rotate(0deg);     }
+  50%  { transform: translate(-50%,-50%) scale(1.08) rotate(-160deg);}
+  100% { transform: translate(-50%,-50%) scale(1) rotate(-320deg);  }
+}
+@keyframes splash-orb-drift-3 {
+  0%   { transform: translate(-50%,-50%) scale(0.95) rotate(0deg);  }
+  50%  { transform: translate(-50%,-50%) scale(1.07) rotate(150deg); }
+  100% { transform: translate(-50%,-50%) scale(0.95) rotate(300deg); }
+}
+@keyframes splash-shine-move {
+  from { left: -120%; }
+  to   { left: 220%; }
+}
+
+.splash-orb {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  filter: blur(30px);
+  border-radius: 9999px;
+  opacity: 0.35;
+  pointer-events: none;
+}
+.splash-orb--one {
+  width: 520px; height: 520px;
+  background: radial-gradient( circle at 30% 30%, rgba(99,102,241,0.8), transparent 60% ),
+              radial-gradient( circle at 70% 70%, rgba(168,85,247,0.7), transparent 60% );
+  animation: splash-orb-drift-1 6s ease-in-out infinite;
+}
+.splash-orb--two {
+  width: 420px; height: 420px;
+  background: radial-gradient( circle at 30% 70%, rgba(59,130,246,0.75), transparent 60% ),
+              radial-gradient( circle at 75% 30%, rgba(236,72,153,0.6), transparent 60% );
+  animation: splash-orb-drift-2 7s ease-in-out infinite;
+}
+.splash-orb--three {
+  width: 560px; height: 560px;
+  background: radial-gradient( circle at 50% 50%, rgba(14,165,233,0.5), transparent 60% ),
+              radial-gradient( circle at 60% 40%, rgba(139,92,246,0.55), transparent 60% );
+  animation: splash-orb-drift-3 8s ease-in-out infinite;
+}
+.splash-shine {
+  position: absolute;
+  top: 40%;
+  left: -120%;
+  width: 30%;
+  height: 20%;
+  transform: rotate(-12deg);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+  filter: blur(6px);
+  animation: splash-shine-move 1.4s ease-in-out infinite;
+  pointer-events: none;
+}
+
 /*   @media (prefers-color-scheme: dark) {
 	::-webkit-scrollbar-track {
 	  background: rgba(3, 0, 20, 0.6);

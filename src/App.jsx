@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import React, { useState } from 'react';
 import "./index.css";
-import Home from "./Pages/Home";
 import About from "./Pages/About";
 import AnimatedBackground from "./components/Background";
 import Navbar from "./components/Navbar";
@@ -26,7 +25,6 @@ const LandingPage = ({ showWelcome, setShowWelcome }) => {
         <>
           <Navbar />
           <AnimatedBackground />
-          <Home />
           <About />
           <Portofolio />
           <ContactPage />
@@ -70,9 +68,7 @@ function App() {
             element={<LandingPage showWelcome={showWelcome} setShowWelcome={setShowWelcome} />}
           />
           <Route path="/project/:id" element={<ProjectPageLayout />} />
-          {/* NEW: Achievements route */}
           <Route path="/achievements" element={<Certificate />} />
-          {/* Fallback: redirect unknown routes to Home */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </ErrorBoundary>

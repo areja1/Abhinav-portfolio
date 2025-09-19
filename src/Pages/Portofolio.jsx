@@ -9,6 +9,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import { useLocation } from "react-router-dom";
 
 import CardProject from "../components/CardProject";
 import TechStackIcon from "../components/TechStackIcon";
@@ -19,12 +20,11 @@ import "aos/dist/aos.css";
 
 import { Code, Award, Boxes, Briefcase } from "lucide-react";
 import PROJECTS from "../data/projects";
-
-// ===== ABHINAV: local Experience data (create src/data/experiences.js if missing) =====
 import { EXPERIENCES } from "../data/experiences";
 
-// -----------------------------------------------------------------------------
-// Small reusable Show More/Less button
+/* -------------------------------------------------------------------------- */
+/* Small reusable Show More/Less button                                       */
+/* -------------------------------------------------------------------------- */
 const ToggleButton = ({ onClick, isShowingMore }) => (
   <button
     onClick={onClick}
@@ -39,8 +39,9 @@ ToggleButton.propTypes = {
   isShowingMore: PropTypes.bool.isRequired,
 };
 
-// -----------------------------------------------------------------------------
-// MUI TabPanel helper
+/* -------------------------------------------------------------------------- */
+/* MUI TabPanel helper                                                        */
+/* -------------------------------------------------------------------------- */
 function TabPanel({ children, value, index, ...other }) {
   return (
     <div
@@ -52,7 +53,6 @@ function TabPanel({ children, value, index, ...other }) {
     >
       {value === index && (
         <Box sx={{ p: { xs: 1, sm: 3 }, overflow: "hidden" }}>
-          {/* Ensure Tailwind text colors apply inside Typography */}
           <Typography component="div" color="inherit" sx={{ color: "inherit" }}>
             {children}
           </Typography>
@@ -74,8 +74,9 @@ function a11yProps(index) {
   };
 }
 
-// -----------------------------------------------------------------------------
-// Tech stack icons (served from /public or CDN)
+/* -------------------------------------------------------------------------- */
+/* Tech stack icons (served from /public or CDN)                              */
+/* -------------------------------------------------------------------------- */
 const techStacks = [
   // Local files that already exist in /public
   { icon: "html.svg", language: "HTML" },
@@ -85,12 +86,14 @@ const techStacks = [
   { icon: "nodejs.svg", language: "Node.js" },
 
   // From resume (CDN icons)
+  { icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg", language: "Java" },
   { icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg", language: "Python" },
   { icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-plain.svg", language: "Django" },
   { icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/fastapi/fastapi-plain.svg", language: "FastAPI" },
   { icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original.svg", language: "Flask" },
-  { icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg", language: "Java" },
   { icon: "https://cdn.simpleicons.org/openai/ffffff", language: "OpenAI" },
+  { icon: "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f9e0.svg", language: "AI/ML" },
+  { icon: "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f4ac.svg", language: "LLMs" },
   { icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/spring/spring-original.svg", language: "Spring" },
   { icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/hibernate/hibernate-original.svg", language: "Hibernate" },
   { icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg", language: "PostgreSQL" },
@@ -104,26 +107,66 @@ const techStacks = [
   { icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postman/postman-original.svg", language: "Postman" },
   { icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg", language: "C" },
   { icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg", language: "C++" },
-  { icon: "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f9e0.svg", language: "AI/ML" }, // brain
-  { icon: "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f4ac.svg", language: "LLMs" },
 ];
 
-// -----------------------------------------------------------------------------
-// Main page
+/* -------------------------------------------------------------------------- */
+/* Main page                                                                  */
+/* -------------------------------------------------------------------------- */
 export default function Portofolio() {
   const theme = useTheme();
   const [value, setValue] = useState(0);
   const isNarrow = useMediaQuery(theme.breakpoints.down("sm"));
+  const location = useLocation();
+
+  // Smooth scroll helper
+  const scrollToPortfolio = () => {
+    const el = document.getElementById("Portofolio");
+    if (!el) return;
+    const offset = 96; // adjust if you have a sticky header
+    const y = el.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({ top: y, behavior: "smooth" });
+  };
+
+  // Read "?tab=" from hash and smooth scroll to #Portofolio. Scrub hash after.
+  useEffect(() => {
+    const applyTab = (name) => {
+      if (!name) return;
+      // 0=Experience, 1=Projects, 2=Tech Stack, 3=Achievements
+      const map = { experience: 0, projects: 1, tech: 2, stack: 2, techstack: 2, achievements: 3 };
+      if (Object.prototype.hasOwnProperty.call(map, name)) {
+        setValue(map[name]);
+      }
+    };
+
+    const readHash = () => {
+      const raw = (window.location.hash || "").toLowerCase();
+      const [path, qs] = raw.split("?");
+      const params = new URLSearchParams(qs || "");
+      const tab = params.get("tab");
+      applyTab(tab);
+      if (path.includes("#portofolio")) {
+        scrollToPortfolio();
+        setTimeout(() => {
+          try {
+            window.history.replaceState(null, "", window.location.pathname + window.location.search);
+          } catch {}
+        }, 400);
+      }
+    };
+
+    readHash();
+    const onHash = () => readHash();
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, [location.hash]);
 
   const [projects, setProjects] = useState([]);
-  const [certificates, setCertificates] = useState([]);
-
-  const [showAllProjects, setShowAllProjects] = useState(false);
-  const [showAllCertificates, setShowAllCertificates] = useState(false);
 
   // Experience state (local file)
   const [experiences, setExperiences] = useState([]);
   const [showAllExperiences, setShowAllExperiences] = useState(false);
+
+  const [showAllProjects, setShowAllProjects] = useState(false);
 
   const isMobile = typeof window !== "undefined" ? window.innerWidth < 768 : false;
   const initialItems = isMobile ? 4 : 6;
@@ -133,23 +176,27 @@ export default function Portofolio() {
     AOS.init({ once: false });
   }, []);
 
-  // Load experiences from local file
+  // Load experiences from local file safely
   useEffect(() => {
-    const sorted = [...EXPERIENCES].sort((a, b) => (b.order ?? 0) - (a.order ?? 0));
-    setExperiences(sorted);
+    try {
+      const src = Array.isArray(EXPERIENCES) ? EXPERIENCES : [];
+      const sorted = [...src].sort((a, b) => (b?.order ?? 0) - (a?.order ?? 0));
+      setExperiences(sorted);
+    } catch (e) {
+      console.error("Failed to load EXPERIENCES:", e);
+      setExperiences([]);
+    }
   }, []);
 
-  // Load only local PROJECTS; no Firestore; no localStorage cache
+  // Load only local PROJECTS
   const fetchData = useCallback(() => {
     try {
       const projectData = PROJECTS;
       setProjects(projectData);
-      // Keep certificates empty to avoid breaking any UI that references it
-      setCertificates([]);
     } catch (error) {
       console.error("Error initializing projects:", error);
     }
-  }, []);;
+  }, []);
 
   useEffect(() => {
     fetchData();
@@ -160,12 +207,10 @@ export default function Portofolio() {
 
   const toggleShowMore = (type) => {
     if (type === "projects") setShowAllProjects((p) => !p);
-    if (type === "certificates") setShowAllCertificates((p) => !p);
     if (type === "experiences") setShowAllExperiences((p) => !p);
   };
 
   const displayedProjects = showAllProjects ? projects : projects.slice(0, initialItems);
-  const displayedCertificates = showAllCertificates ? certificates : certificates.slice(0, initialItems);
   const displayedExperiences = showAllExperiences ? experiences : experiences.slice(0, initialItems);
 
   return (
@@ -175,7 +220,7 @@ export default function Portofolio() {
         <h2 className="inline-block text-3xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#6366f1] to-[#a855f7]">
           Portfolio
         </h2>
-        <p className="mt-3 text-slate-400">Projects, Achievements, Experience & Tech Stack</p>
+        <p className="mt-3 text-slate-400">Experience, Projects, Tech Stack & Achievements</p>
       </div>
 
       <Box sx={{ width: "100%" }}>
@@ -242,62 +287,16 @@ export default function Portofolio() {
               "& .MuiTabs-flexContainer": { gap: "8px" },
             }}
           >
-            <Tab icon={<Code className="mb-2 w-5 h-5 transition-all duration-300" />} label="Projects" {...a11yProps(0)} />
-            <Tab icon={<Award className="mb-2 w-5 h-5 transition-all duration-300" />} label="Achievements" {...a11yProps(1)} />
-            <Tab icon={<Briefcase className="mb-2 w-5 h-5 transition-all duration-300" />} label="Experience" {...a11yProps(2)} />
-            <Tab icon={<Boxes className="mb-2 w-5 h-5 transition-all duration-300" />} label="Tech Stack" {...a11yProps(3)} />
+            <Tab icon={<Briefcase className="mb-2 w-5 h-5 transition-all duration-300" />} label="Experience" {...a11yProps(0)} />
+            <Tab icon={<Code className="mb-2 w-5 h-5 transition-all duration-300" />} label="Projects" {...a11yProps(1)} />
+            <Tab icon={<Boxes className="mb-2 w-5 h-5 transition-all duration-300" />} label="Tech Stack" {...a11yProps(2)} />
+            <Tab icon={<Award className="mb-2 w-5 h-5 transition-all duration-300" />} label="Achievements" {...a11yProps(3)} />
           </Tabs>
         </AppBar>
 
         <SwipeableViews axis={theme.direction === "rtl" ? "x-reverse" : "x"} index={value} onChangeIndex={handleChangeIndex}>
-          {/* Projects (index 0) */}
+          {/* Experience (index 0) */}
           <TabPanel value={value} index={0} dir={theme.direction}>
-            <div className="container mx-auto flex justify-center items-center overflow-hidden">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 gap-5">
-                {displayedProjects.map((project, index) => (
-                  <div className="min-w-0"
-                    key={project.id || index}
-                    data-aos={index % 3 === 0 ? "fade-up-right" : index % 3 === 1 ? "fade-up" : "fade-up-left"}
-                    data-aos-duration={index % 3 === 1 ? "1200" : "1000"}
-                  >
-                    <CardProject
-                      Img={project.Img}
-                      Title={project.Title}
-                      Description={project.Description}
-                      Link={project.Link}
-                      id={project.id}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {projects.length > initialItems && (
-              <div className="mt-6 w-full flex justify-start">
-                <ToggleButton onClick={() => toggleShowMore("projects")} isShowingMore={showAllProjects} />
-              </div>
-            )}
-          </TabPanel>
-
-          {/* Achievements (index 1) */}
-          <TabPanel value={value} index={1} dir={theme.direction}>
-            <div className="container mx-auto flex justify-center items-center overflow-hidden">
-              <div className="w-full">
-                <div className="p-5 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-all">
-                  <Certificate />
-                </div>
-              </div>
-            </div>
-
-            {certificates.length > initialItems && (
-              <div className="mt-6 w-full flex justify-start">
-                <ToggleButton onClick={() => toggleShowMore("certificates")} isShowingMore={showAllCertificates} />
-              </div>
-            )}
-          </TabPanel>
-
-          {/* Experience (index 2) */}
-          <TabPanel value={value} index={2} dir={theme.direction}>
             <div className="container mx-auto flex justify-center items-center overflow-hidden">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 gap-5">
                 {displayedExperiences.map((exp, idx) => (
@@ -344,9 +343,39 @@ export default function Portofolio() {
             )}
           </TabPanel>
 
-          {/* Tech Stack (index 3) */}
-          <TabPanel value={value} index={3} dir={theme.direction}>
-            <div className="container mx-auto flex justify-center items-center overflow-hidden pb-[5%]">
+          {/* Projects (index 1) */}
+          <TabPanel value={value} index={1} dir={theme.direction}>
+            <div className="container mx-auto flex justify-center items-center overflow-hidden">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 gap-5">
+                {displayedProjects.map((project, index) => (
+                  <div
+                    className="min-w-0"
+                    key={project.id || index}
+                    data-aos={index % 3 === 0 ? "fade-up-right" : index % 3 === 1 ? "fade-up" : "fade-up-left"}
+                    data-aos-duration={index % 3 === 1 ? "1200" : "1000"}
+                  >
+                    <CardProject
+                      Img={project.Img}
+                      Title={project.Title}
+                      Description={project.Description}
+                      Link={project.Link}
+                      id={project.id}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {projects.length > initialItems && (
+              <div className="mt-6 w-full flex justify-start">
+                <ToggleButton onClick={() => toggleShowMore("projects")} isShowingMore={showAllProjects} />
+              </div>
+            )}
+          </TabPanel>
+
+          {/* Tech Stack (index 2) */}
+          <TabPanel value={value} index={2} dir={theme.direction}>
+            <div className="container mx-auto flex justify-center items-center overflow-hidden">
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 lg:gap-8 gap-5">
                 {techStacks.map((stack, index) => (
                   <div
@@ -357,6 +386,17 @@ export default function Portofolio() {
                     <TechStackIcon TechStackIcon={stack.icon} Language={stack.language} />
                   </div>
                 ))}
+              </div>
+            </div>
+          </TabPanel>
+
+          {/* Achievements (index 3) */}
+          <TabPanel value={value} index={3} dir={theme.direction}>
+            <div className="container mx-auto flex justify-center items-center overflow-hidden pb-[5%]">
+              <div className="w-full">
+                <div className="p-5 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-all">
+                  <Certificate />
+                </div>
               </div>
             </div>
           </TabPanel>
