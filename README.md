@@ -1,6 +1,6 @@
 # Portfolio V5  
 Hello everyone!  
-Let me introduce myself, I’m Eki Zulfar Rachman. On this occasion, I’d like to share the portfolio website project that I’ve developed.  
+Let me introduce myself, I’m Abhinav Reja. I’d like to share the portfolio website project that I’ve developed.  
 
 **Tech Stack used:**  
 - ReactJS  
@@ -35,7 +35,7 @@ Ensure that you have already installed:
 1. **Download this project:**  
 
    ```bash  
-   git clone https://github.com/EkiZR/Portofolio_V5.git  
+   git clone https://github.com/areja1/Abhinav-portfolio
    ```  
 
 2. **Install all dependencies:**  
