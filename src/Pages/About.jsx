@@ -223,7 +223,7 @@ const AboutPage = () => {
         color: "from-[#a855f7] to-[#6366f1]",
         value: totalAchievements,
         label: "Achievements",
-        description: "Professional milestones earned",
+        description: "Sports & extracurricular milestones",
         animation: "fade-up",
         href: "#Portofolio",
         tab: "achievements",
@@ -307,14 +307,14 @@ const AboutPage = () => {
             {/* ===== Social icons ===== */}
             <div className="mt-4 flex items-center gap-4">
               <a
-                href="https://github.com/your-handle" target="_blank" rel="noreferrer"
+                 href="https://github.com/areja1" target="_blank" rel="noreferrer"
                 className="p-3 rounded-2xl bg-white/5 border border-white/10 hover:border-white/20 hover:bg-white/10 transition-all shadow"
                 aria-label="GitHub"
               >
                 <Github className="w-5 h-5 text-white/80" />
               </a>
               <a
-                href="https://www.linkedin.com/in/your-handle" target="_blank" rel="noreferrer"
+                href="https://www.linkedin.com/in/abhinavreja/" target="_blank" rel="noreferrer"
                 className="p-3 rounded-2xl bg-white/5 border border-white/10 hover:border-white/20 hover:bg-white/10 transition-all shadow"
                 aria-label="LinkedIn"
               >

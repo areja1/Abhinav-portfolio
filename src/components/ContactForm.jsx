@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
 import { Mail, Send, Loader2 } from "lucide-react";
 
@@ -7,6 +7,7 @@ const TO_EMAIL = "abhinavreja200@gmail.com";
 export default function ContactForm() {
   const [sending, setSending] = useState(false);
   const [ok, setOk] = useState(null); // null | "success" | "error"
+  const inFlight = useRef(false);      // ✅ prevent duplicate sends
   const [form, setForm] = useState({
     from_name: "",
     from_email: "",
@@ -27,11 +28,18 @@ export default function ContactForm() {
   const onSubmit = async (e) => {
     e.preventDefault();
     if (form.bot_field) return; // spam
+
+    // ✅ HARD GUARD: if a send is already in progress, ignore this submit
+    if (inFlight.current || sending) return;
+    inFlight.current = true;
+
     const err = validate();
     if (err) {
       alert(err);
+      inFlight.current = false;
       return;
     }
+
     setSending(true);
     setOk(null);
     try {
@@ -42,12 +50,10 @@ export default function ContactForm() {
       await emailjs.send(
         service,
         template,
-        {
-          ...form,
-          to_email: TO_EMAIL,
-        },
+        { ...form, to_email: TO_EMAIL },
         { publicKey: pubkey }
       );
+
       setOk("success");
       setForm({ from_name: "", from_email: "", subject: "", message: "", bot_field: "" });
     } catch (err2) {
@@ -55,6 +61,7 @@ export default function ContactForm() {
       setOk("error");
     } finally {
       setSending(false);
+      inFlight.current = false; // ✅ allow next submit only after completion
     }
   };
 
@@ -139,7 +146,6 @@ export default function ContactForm() {
               <span>{sending ? "Sending..." : "Send Message"}</span>
             </button>
 
-            {/* mailto fallback */}
             <a
               href={`mailto:${TO_EMAIL}?subject=${encodeURIComponent(form.subject || "Hello")}&body=${encodeURIComponent(
                 `${form.message}\n\n— ${form.from_name} <${form.from_email}>`
@@ -149,12 +155,8 @@ export default function ContactForm() {
               Or email me directly
             </a>
 
-            {ok === "success" && (
-              <span className="text-green-300/90">Thanks! Your message has been sent.</span>
-            )}
-            {ok === "error" && (
-              <span className="text-red-300/90">Couldn’t send right now. Please use the email link.</span>
-            )}
+            {ok === "success" && <span className="text-green-300/90">Thanks! Your message has been sent.</span>}
+            {ok === "error" && <span className="text-red-300/90">Couldn’t send right now. Please use the email link.</span>}
           </div>
         </form>
       </div>

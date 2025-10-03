@@ -92,7 +92,7 @@ export default function CommentsEphemeral() {
 
       {/* List */}
       <div className="mt-6">
-        <h3 className="text-sm font-semibold text-white/80 mb-2">Comments (ephemeral)</h3>
+        <h3 className="text-sm font-semibold text-white/80 mb-2">Comments</h3>
         {comments.length === 0 ? (
           <p className="text-sm text-slate-400">Be the first to comment.</p>
         ) : (
