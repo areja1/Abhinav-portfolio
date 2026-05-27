@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ExternalLink, ArrowRight } from 'lucide-react';
 
-const CardProject = ({ Img, Title, Description, Link: ProjectLink, id }) => {
+const CardProject = ({ Img, Title, Description, Link: ProjectLink, id, Badge }) => {
   // Safety guards (kept, though Live Demo is hidden when no link)
   const handleLiveDemo = (e) => {
     if (!ProjectLink) {
@@ -29,6 +29,11 @@ const CardProject = ({ Img, Title, Description, Link: ProjectLink, id }) => {
               alt={Title}
               className="w-full h-40 object-cover transform group-hover:scale-105 transition-transform duration-500"
             />
+            {Badge && (
+              <span className="absolute top-2 left-2 px-2 py-1 text-xs font-semibold rounded-md bg-gradient-to-r from-yellow-400 to-orange-400 text-black shadow-lg">
+                🏆 {Badge}
+              </span>
+            )}
           </div>
 
           <div className="mt-4 space-y-3">

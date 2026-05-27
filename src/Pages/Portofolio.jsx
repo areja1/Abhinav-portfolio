@@ -360,6 +360,7 @@ export default function Portofolio() {
                       Description={project.Description}
                       Link={project.Link}
                       id={project.id}
+                      Badge={project.Badge}
                     />
                   </div>
                 ))}
