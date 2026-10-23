@@ -10,9 +10,10 @@ const PROFILE = {
   email: "abhinavreja2000@gmail.com",
   github: "https://github.com/areja1",
   linkedin: "https://www.linkedin.com/in/abhinavreja",
-  resume: "/Abhinav_Reja_Resume.pdf",
+  // BASE_URL is "/" on Vercel and "./" for relative preview builds.
+  resume: `${import.meta.env.BASE_URL}Abhinav_Reja_Resume.pdf`,
   siteUrl: "https://abhinavrejaportfolio.vercel.app",
-  photo: "/Photo.jpg",
+  photo: `${import.meta.env.BASE_URL}Photo.jpg`,
   lastUpdated: "October 2026",
   openToWork: true,
 
