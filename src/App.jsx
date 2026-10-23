@@ -1,24 +1,35 @@
-import Header from "./components/Header.jsx";
-import Intro from "./components/Intro.jsx";
-import Now from "./components/Now.jsx";
-import Experience from "./components/Experience.jsx";
-import Projects from "./components/Projects.jsx";
-import Background from "./components/Background.jsx";
-import Contact from "./components/Contact.jsx";
+import { useEffect } from "react";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import Nav from "./components/Nav.jsx";
 import Footer from "./components/Footer.jsx";
+import Home from "./pages/Home.jsx";
+import ProjectPage from "./pages/ProjectPage.jsx";
+
+function ScrollManager() {
+  const { pathname, hash } = useLocation();
+  useEffect(() => {
+    if (hash) {
+      const el = document.querySelector(hash);
+      if (el) {
+        el.scrollIntoView({ block: "start" });
+        return;
+      }
+    }
+    window.scrollTo({ top: 0 });
+  }, [pathname, hash]);
+  return null;
+}
 
 export default function App() {
   return (
     <>
-      <Header />
-      <main>
-        <Intro />
-        <Now />
-        <Experience />
-        <Projects />
-        <Background />
-        <Contact />
-      </main>
+      <ScrollManager />
+      <Nav />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/work/:slug" element={<ProjectPage />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
       <Footer />
     </>
   );

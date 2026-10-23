@@ -11,7 +11,8 @@ export default function Footer() {
           Last updated {PROFILE.lastUpdated} ·{" "}
           <a href="https://github.com/areja1/Abhinav-portfolio" target="_blank" rel="noopener noreferrer">
             Source
-          </a>
+          </a>{" "}
+          · Demos are illustrative sketches of real work.
         </span>
       </div>
     </footer>
