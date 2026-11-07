@@ -1596,3 +1596,145 @@ footer a:hover {
   border-color: var(--demo-accent, var(--accent));
   color: var(--text);
 }
+
+/* social post flow: tighter steps plus platform tags */
+
+.steps.compact {
+  gap: 0.35rem;
+}
+
+.steps.compact .step {
+  padding: 0.38rem 0.7rem;
+  font-size: 0.8rem;
+}
+
+.plats {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0.3rem;
+}
+
+.plat {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  padding: 0.22rem 0.55rem;
+  border-radius: 3px;
+  border: 1px solid var(--line-2);
+  color: var(--muted);
+  transition: all 300ms ease;
+}
+
+.plat.on {
+  color: var(--demo-accent, var(--accent));
+  border-color: var(--demo-accent, var(--accent));
+}
+
+/* search and AI visibility */
+
+.vis {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 0.7rem;
+}
+
+.vis-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.vis-tab {
+  font-size: 0.74rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  transition: all 300ms ease;
+}
+
+.vis-tab.on {
+  color: var(--bg);
+  background: var(--demo-accent, var(--accent));
+  border-color: var(--demo-accent, var(--accent));
+}
+
+.vis-date {
+  margin-left: auto;
+}
+
+.vis-pane {
+  flex: 1;
+  height: auto;
+  animation: vis-in 400ms ease;
+}
+
+.vis .bar-row {
+  grid-template-columns: 10rem 1fr 3rem;
+}
+
+.vis .claims {
+  gap: 0.4rem;
+}
+
+.vis .claim {
+  padding: 0.4rem 0.75rem;
+}
+
+.vis .claim .v {
+  min-width: 8.5rem;
+}
+
+.vis-list {
+  display: grid;
+  gap: 0.5rem;
+  align-content: center;
+}
+
+.vis-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.55rem 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--bg-3);
+  font-size: 0.85rem;
+}
+
+.vis-row .move {
+  display: flex;
+  gap: 0.6rem;
+  align-items: baseline;
+}
+
+.vis-row .move s {
+  color: var(--muted);
+}
+
+.vis-row .move b {
+  color: var(--demo-accent, var(--accent));
+  font-size: 0.95rem;
+}
+
+@keyframes vis-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vis-pane {
+    animation: none;
+  }
+}
+
+.vis {
+  padding-bottom: 1.1rem;
+}

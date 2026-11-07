@@ -53,6 +53,56 @@ export const PROJECTS = [
     },
   },
   {
+    slug: "pcc-seo-geo",
+    name: "Search and AI visibility for Precision Concrete Cutting",
+    year: "2026",
+    tag: "Client work at OZZI",
+    demo: "rankings",
+    accent: "#ffb86b",
+    description:
+      "Made a national sidewalk safety company easy to find everywhere a city buyer looks: Google Search, Google Maps, and AI answer engines like ChatGPT, Perplexity and Google AI. In 20 days it went from rarely mentioned to the first name AI tools recommend.",
+    tech: ["SEO", "GEO", "Google Search Console", "Schema.org JSON-LD", "Wix MCP", "Local SEO"],
+    live: "https://www.safesidewalks.com",
+    caseStudy: {
+      problem:
+        "Cities and property managers looking for sidewalk trip hazard removal were finding competitors first. AI tools often left the company out or repeated old facts about it. The client's top priority was simple: be found, and be the name people and AI tools trust.",
+      approach: [
+        "Built a measurement baseline before changing anything: a fixed set of service searches tracked on Google Search and Maps, and the same buyer questions asked to ChatGPT, Perplexity, Google AI Overviews and Google AI Mode.",
+        "Technical SEO: worked through Search Console indexing problems, fixed page titles, alt text and location pages, and added structured data so search engines and AI tools read the services, locations and contact details the same way.",
+        "Content for people and for AI: 8 new pages that answer the exact questions city buyers ask, written as clear, quotable passages that answer engines can cite.",
+        "Local presence: audited the Google Business Profiles behind the Maps results and rewrote their descriptions and services to match what the company actually does.",
+        "Brand signals: added Google's Preferred Sources button to every page of the live Wix site, so readers can choose to see more of the company in Google.",
+        "Re-measured the same searches and questions on a schedule, so every change is judged by numbers, not by feel.",
+      ],
+      result:
+        "From Oct 6 to Oct 26, 2026: AI answers naming the company rose from 60% to 83%, tracked searches with it in Google's top 3 from 48% to 61%, and Google Maps listings from 1 to 10. It reached #1 on Google for \"trip hazard repair\", \"trip hazard removal\" and \"sidewalk trip hazard removal\", and \"sidewalk grinding service\" moved from #8 to #2. ChatGPT now picks it first, Google AI Overviews and AI Mode name it first, and Perplexity names only this company. Visibility is still climbing.",
+    },
+  },
+  {
+    slug: "pcc-social-agent",
+    name: "Social media agent dashboard for Precision Concrete Cutting",
+    year: "2026",
+    tag: "Client work at OZZI",
+    demo: "postflow",
+    accent: "#9ad0ff",
+    description:
+      "A dashboard that writes social posts for LinkedIn, Instagram, Facebook and X from the company's approved facts, then lets a person review, edit, approve and schedule them. Nothing posts by itself.",
+    tech: ["Python", "Codex CLI", "Supabase Postgres", "pgvector", "Zernio API", "Google Drive API"],
+    caseStudy: {
+      problem:
+        "The company wanted a steady presence on four social platforms without someone writing every post by hand. Every claim had to be true, posts had to sound human and not repeat themselves, and nothing could go out without a person signing off.",
+      approach: [
+        "A password protected dashboard that runs on the user's own computer. The local Codex program does the writing, so no AI API keys sit in the app.",
+        "Every claim must come from an approved knowledge base: company facts plus one file per city project, such as Tacoma, Seattle and Herriman. Drafts that step outside it are caught before review.",
+        "Designed and built the database on Supabase: posts, topics covered, results and the reason for every rejection, with row level security and a staging schema for safe testing.",
+        "Agent memory turns rejected drafts into lessons and an avoid list, so the next draft does not repeat the mistake. Repeat rules rotate topics and facts, and a style check removes em dashes and AI phrasing.",
+        "Approved posts go to Zernio, which schedules them on LinkedIn, Instagram, Facebook and X. A daily sync pulls results back into the database.",
+      ],
+      result:
+        "The full engineering handoff was finished in 9 phases, with 823 automated tests passing on Windows and Linux. Draft, review, approve, schedule and results sync all work against the live posting service.",
+    },
+  },
+  {
     slug: "crodex",
     name: "CrodeX",
     year: "2025",

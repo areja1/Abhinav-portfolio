@@ -6,6 +6,8 @@ import SearchDemo from "./SearchDemo.jsx";
 import RecoveryDemo from "./RecoveryDemo.jsx";
 import VerdictDemo from "./VerdictDemo.jsx";
 import CrisisDemo from "./CrisisDemo.jsx";
+import RankingsDemo from "./RankingsDemo.jsx";
+import PostFlowDemo from "./PostFlowDemo.jsx";
 
 // Keyed by the `demo` field in src/data/projects.js.
 export const DEMOS = {
@@ -17,4 +19,6 @@ export const DEMOS = {
   recovery: RecoveryDemo,
   verdict: VerdictDemo,
   crisis: CrisisDemo,
+  rankings: RankingsDemo,
+  postflow: PostFlowDemo,
 };
