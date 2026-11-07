@@ -791,10 +791,10 @@ section {
 .contact .big {
   font-family: var(--display);
   font-weight: 700;
-  font-size: clamp(1.6rem, 5vw, 4rem);
-  letter-spacing: -0.035em;
-  line-height: 1.05;
-  word-break: break-word;
+  font-size: clamp(1rem, 2.3vw, 1.9rem);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  white-space: nowrap;
   margin: 0 0 1rem;
 }
 
